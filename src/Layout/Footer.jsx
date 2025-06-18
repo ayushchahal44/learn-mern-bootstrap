@@ -1,10 +1,11 @@
 import React from 'react'
-function Home() {
+
+function Footer() {
   return (
     <div className='container text-center'>
-        <h1>Home page.</h1>
+      Footer part
     </div>
   )
 }
 
-export default Home
+export default Footer
