@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+// import { useNavigate } from 'react-router-dom';
 
-function Login() {
+function Login({updateUserDetails}) {
+  // const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     password: ""
@@ -37,6 +39,15 @@ function Login() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    if(formData.email === "admin@gmail.com" && formData.password === "admin") {
+      updateUserDetails({
+        email: 'admin@gmail.com',
+        name: 'Admin',
+      });
+      // navigate("/dashboard");
+    } else{
+      setMessage("Invalid email or password");
+    }
 
     if (validateForm()) {
       setMessage("Login successful!");
@@ -79,7 +90,7 @@ function Login() {
           {error.password && <div className="text-danger">{error.password}</div>}
         </div>
 
-        <button type="submit" className="btn btn-primary w-100">Login</button>
+        <button type="submit" className="btn btn-primary w-100 mb-4">Login</button>
 
         {message && <div className="text-success mt-3">{message}</div>}
       </form>
