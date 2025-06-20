@@ -30,7 +30,7 @@ function App() {
       <Routes>
         <Route path="/" element={userDetails ? <Navigate to ='/dashboard' />:<AppLayout><Home/></AppLayout>} />
         <Route path="/login" element={userDetails ? <Navigate to='/dashboard'/> : <AppLayout><Login updateUserDetails={updateUserDetails} /></AppLayout>} />
-        <Route path="/dashboard" element={userDetails ? <Dashboard/> : <Navigate to='/login'/> }/>
+        <Route path="/dashboard" element={userDetails ? <AppLayout><Dashboard updateUserDetails={updateUserDetails}/></AppLayout> : <Navigate to='/login'/> }/>
       </Routes>
     // // </AppLayout>
   );

@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 
 function Login({updateUserDetails}) {
-  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     password: ""
@@ -60,7 +58,7 @@ function Login({updateUserDetails}) {
       };
       try{
         const response = await axios.post('http://localhost:5000/auth/login', body,configuration );
-        navigate("/dashboard");
+        updateUserDetails(response.data.userDetails);
         console.log(response);
       }catch(error){
         setError({message:'Something went wrong!'});
