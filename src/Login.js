@@ -38,16 +38,6 @@ function Login({updateUserDetails}) {
 
   const handleSubmit = async(event) => {
     event.preventDefault();
-    // if(formData.email === "admin@gmail.com" && formData.password === "admin") {
-    //   updateUserDetails({
-    //     email: 'admin@gmail.com',
-    //     name: 'Admin',
-    //   });
-    //   // navigate("/dashboard");
-    // } else{
-    //   setMessage("Invalid email or password");
-    // }
-
     if (validateForm()) {
       const body = {
         email: formData.email,
@@ -61,15 +51,13 @@ function Login({updateUserDetails}) {
         updateUserDetails(response.data.userDetails);
         console.log(response);
       }catch(error){
-        setError({message:'Something went wrong!'});
+        if (error.response && error.response.data && error.response.data.message) {
+          setError({message: error.response.data.message});
+        } else {
+          setError({message:'Something went wrong!'});
+        }
       }
-      
-    //   setMessage("Login successful!");
-    //   setError({});
-    //   console.log("Form Data Submitted:", formData);
-    // } else {
-    //   setMessage("");
-    // }
+
     }
   };
 
