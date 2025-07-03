@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { GoogleOAuthProvider,GoogleLogin } from '@react-oauth/google';
+import { serverEndpoint } from './config';
+import { useDispatch } from 'react-redux';
+import SET_USER from './redux/actionTypes';
 
-function Login({updateUserDetails}) {
+function Login() {
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     email: "",
     password: ""
@@ -47,19 +52,39 @@ function Login({updateUserDetails}) {
         withCredentials: true
       };
       try{
-        const response = await axios.post('http://localhost:5000/auth/login', body,configuration );
-        updateUserDetails(response.data.userDetails);
+        const response = await axios.post(`${serverEndpoint}/auth/login`, body,configuration );
+        // updateUserDetails(response.data.userDetails);
+        dispatch({
+        type: SET_USER,
+        payload: response.data.userDetails
+      });
         console.log(response);
       }catch(error){
-        if (error.response && error.response.data && error.response.data.message) {
-          setError({message: error.response.data.message});
+        if (error?.response?.status === 400) {
+          setError({message: 'Invalid email or password' });
         } else {
           setError({message:'Something went wrong!'});
         }
       }
 
     }
+  }
+    const handleGoogleSignin = async (authResponse) => {
+      try{
+        const response = await axios.post(`${serverEndpoint}/auth/google-auth`, { idToken: authResponse.credential },{withCredentials: true});
+        // updateUserDetails(response.data.userDetails);
+        dispatch({
+        type: SET_USER,
+        payload: response.data.userDetails
+      });
+      }catch(error){
+        console.error('Google login error:', error);
+      }
   };
+  const handleGoogleSigninFailure = async (error) => {
+    console.log(error);
+    setError({message: 'Google login failed. Please try again.'});
+  }
 
   return (
     <div className="container text-center mt-5">
@@ -98,6 +123,8 @@ function Login({updateUserDetails}) {
 
         {message && <div className="text-success mt-3">{message}</div>}
       </form>
+      <h4>OR</h4>
+      <GoogleOAuthProvider clientId = {process.env.REACT_APP_GOOGLE_CLIENT_ID}><GoogleLogin onSuccess={handleGoogleSignin} onError={handleGoogleSigninFailure}></GoogleLogin></GoogleOAuthProvider>
     </div>
   );
 }
