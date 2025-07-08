@@ -16,6 +16,7 @@ import Spinner from "./components/Spinner";
 import ManageUsers from "./pages/users/ManageUsers";
 import ProtectedRoute from "./rbac/ProtectedRoute";
 import UnauthorizedAccess from "./components/UnauthorizedAccess";
+import ManagePayments from "./pages/payments/ManagePayments";
 
 function App() {
   // Tracking user details in App because App is the component which decides
@@ -105,7 +106,12 @@ function App() {
         </UserLayout> :
         <AppLayout><Error /></AppLayout>
       } />
+      <Route path="/manage-payment" element={userDetails ? <UserLayout>
+          <ManagePayments/>
+        </UserLayout> :
+        <AppLayout><Error/></AppLayout>} />
     </Routes>
+    
   );
 }
 
