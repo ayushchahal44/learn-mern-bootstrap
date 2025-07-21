@@ -7,8 +7,11 @@ import axios from 'axios';
 import { serverEndpoint } from "../../config/config";
 import { Modal } from 'react-bootstrap';
 import { usePermission } from '../../rbac/permissions';
+import AssessmentIcon from '@mui/icons-material/Assessment'
+import {useNavigate} from 'react-router-dom'
 
 function LinkDashboard() {
+    const navigate = useNavigate();
     const [errors, setErrors] = useState({});
     const [linksData, setLinksData] = useState([]);
     const [formData, setFormData] = useState({
@@ -136,7 +139,10 @@ function LinkDashboard() {
                 });
                 fetchLinks();
             } catch (error) {
-                setErrors({ message: 'Something went wrong, please try again' });
+                if(error.response?.data?.code === 'INSUFFICIENT_FUNDS'){
+                    setErrors({ message: 'You do not have enough credits to perform this action. Add funds to your account using Manage payment option.' });
+
+                }
             } finally {
                 handleModalClose();
             }
@@ -186,6 +192,14 @@ function LinkDashboard() {
                     {permission.canDeleteLink && (
                         <IconButton>
                             <DeleteIcon onClick={() => handleDeleteModalShow(params.row._id)} />
+                        </IconButton>
+                    )}
+
+                    {permission.canViewLink && (
+                        <IconButton>
+                           <AssessmentIcon onClick={()=>{
+                            navigate(`/analytics/${params.row._id}`);
+                           }} />
                         </IconButton>
                     )}
                 </>

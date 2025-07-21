@@ -17,6 +17,7 @@ import ManageUsers from "./pages/users/ManageUsers";
 import ProtectedRoute from "./rbac/ProtectedRoute";
 import UnauthorizedAccess from "./components/UnauthorizedAccess";
 import ManagePayments from "./pages/payments/ManagePayments";
+import AnalyticsDashboard from "./pages/links/AnalyticsDashboard";
 
 function App() {
   // Tracking user details in App because App is the component which decides
@@ -110,6 +111,10 @@ function App() {
           <ManagePayments/>
         </UserLayout> :
         <AppLayout><Error/></AppLayout>} />
+        <Route path="/analytics/:linkId" element={userDetails ? <UserLayout>
+          <AnalyticsDashboard/>
+        </UserLayout> :
+        <Navigate to="/login"/> }/>
     </Routes>
     
   );
